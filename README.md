@@ -13,6 +13,30 @@ $ pip install -e .
 
 ## Usage
 
+### CLI
+
+```bash
+usage: nbgrep.py [-h] -e PATTERN [-F] [-R] [-i] [-l] [-c CELL_TYPE]
+                 path_to_notebooks
+
+Command line access to nbgrep
+
+positional arguments:
+  path_to_notebooks     notebooks to search in
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -e PATTERN, --regexp PATTERN
+  -F, --fixed-string
+  -R, --recursive
+  -i, --ignore-case
+  -l, --files-with-matches
+  -c CELL_TYPE, --cell-type CELL_TYPE
+                        code (default) or markdown
+```
+
+### Python
+
 **class `Notebooks(path_to_notebooks, cell_type="code", **kwargs)` aliased `Nb()`**
 
 Arguments:
