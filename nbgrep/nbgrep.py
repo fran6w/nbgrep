@@ -2,9 +2,10 @@
 
 __author__ = "Francis Wolinski"
 __license__ = "BSD License"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __email__ = 'fran6wol@gmail.com'
 
+import argparse
 import glob
 import json
 import pandas as pd
@@ -51,8 +52,12 @@ class Notebooks:  # class aliased Nb in __init__.py file
                     df["path_"] = nb_file
                     dfs.append(df)
 
-            # merge all DataFrames in a single one
-            self.df = pd.concat(dfs, ignore_index=True, sort=False)
+            if len(dfs) == 0:
+                # empty DataFrame     
+                self.df = pd.DataFrame(columns=["path_", "cell_type", "source"])
+            else:
+                # merge all DataFrames in a single one            
+                self.df = pd.concat(dfs, ignore_index=True, sort=False)
 
         else:
             # produce a DataFrame with info from all cells of a single notebook
@@ -107,3 +112,30 @@ class Notebooks:  # class aliased Nb in __init__.py file
             results = self.df.loc[self.df["source"].str.contains(pat, **kwargs)]
 
         return results
+
+
+if __name__ == "__main__":
+    # command line interface
+    parser = argparse.ArgumentParser(description="Command line access to nbgrep")
+    parser.add_argument("-e", "--regexp", dest="pattern", required=True)
+    parser.add_argument("-F", "--fixed-string", dest="fixed_string", action='store_true')
+    parser.add_argument("-R", "--recursive", dest="recursive", action='store_true')
+    parser.add_argument("-i", "--ignore-case", dest="ignore_case", action='store_true')
+    parser.add_argument("-l", "--files-with-matches", dest="files_with_matches", action='store_true')
+    parser.add_argument("-c", "--cell-type", dest="cell_type", default="code", help='code (default) or markdown')
+    parser.add_argument(dest="path_to_notebooks", help='notebooks to search in')
+    args = parser.parse_args()
+    
+    nb = Notebooks(args.path_to_notebooks, cell_type=args.cell_type, recursive=args.recursive)
+    
+    if args.files_with_matches:
+        # show only file names
+        results = nb.grep(args.pattern.strip('"'), case=not args.ignore_case, regex=not args.fixed_string)[["path_"]].drop_duplicates()
+        for row in results.itertuples():
+            print(row[1])
+    
+    else:
+        # show file names and lines
+        results = nb.grep(args.pattern.strip('"'), case=not args.ignore_case, regex=not args.fixed_string)[["path_", "source"]]
+        for row in results.itertuples():
+            print(row[1], row[2])
