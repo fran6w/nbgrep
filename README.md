@@ -78,7 +78,7 @@ nb = Nb(r"./**/*.ipynb", cell_type="markdown", recursive=True)
 nb.grep(r"\*\*([^*].+)\*\*")
 ```
 
-See tests for more examples.
+See notebook or tests for more examples.
 
 ## License
 
