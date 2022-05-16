@@ -13,7 +13,7 @@ $ pip install -e .
 
 ## Usage
 
-**class `Notebooks()` aliased `Nb()`**
+**class `Notebooks(path_to_notebooks, cell_type="code", **kwargs)` aliased `Nb()`**
 
 Arguments:
 - `path_to_notebooks` str - Path to the notebook(s) which will be parsed with json.
@@ -21,12 +21,12 @@ Arguments:
 - `cell_type` "code" (default) or "markdown"
 - `**kwargs` passed to `glob.iglob()` (default: root_dir=None, dir_fd=None, recursive=False)
 
-**method `grep()`**
+**method `grep(pat, extract=False, **kwargs)`**
 
 Arguments:
 - `pat` str - Character sequence or regular expression (with capture when `extract=True`)
 - `extract` bool - False (default) calls `pandas.str.contains()`, or True calls `pandas.str.extract()`
-- `kwargs` passed either to `pandas.str.contains()` call (default: case=True, flags=0, na=None, regex=True) or to `pandas.str.extract()` call (default: flags=0, expand=True).
+- `**kwargs` passed either to `pandas.str.contains()` call (default: case=True, flags=0, na=None, regex=True) or to `pandas.str.extract()` call (default: flags=0, expand=True).
 	- Warning: arguments interpretation depends on the pandas version
 
 Return:
